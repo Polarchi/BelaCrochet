@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Mis direcciones - Bela Crochet{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Mis direcciones</h1>
+<div class="mb-4">
+    <a href="{% url 'accounts:address_create' %}" class="px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600">Nueva dirección</a>
+</div>
+{% if addresses %}
+    <ul class="space-y-4">
+        {% for address in addresses %}
+            <li class="bg-white shadow p-4 rounded">
+                <p class="font-semibold">{{ address.full_name }}</p>
+                <p>{{ address.line1 }}{% if address.line2 %}, {{ address.line2 }}{% endif %}</p>
+                <p>{{ address.city }}, {{ address.state }}</p>
+                <p>{{ address.country }}{% if address.postal_code %} - {{ address.postal_code }}{% endif %}</p>
+                {% if address.is_default %}<span class="text-sm text-green-600">Predeterminada</span>{% endif %}
+                <div class="mt-2">
+                    <a href="{% url 'accounts:address_update' address.pk %}" class="text-sm text-pink-600 hover:text-pink-800">Editar</a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tienes direcciones guardadas.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,81 @@
+:root {
+  --rosa-principal: #ff85d5;
+  --lila: #e79eff;
+  --azul-claro: #b8e4ff;
+  --rosa-coral: #ff94a2;
+  --amarillo: #ffe180;
+  --verde: #77dd77;   
+  --negro: #333333;
+  --blanco: #ffffff;
+}
+
+/* Fondo global */
+body {
+  background-color: var(--azul-claro);
+  color: var(--negro);
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header (solo la barra superior) */
+.header {
+  background-color: var(--verde);   /* ✅ barra verde */
+  color: var(--blanco);             /* ✅ texto blanco */
+}
+
+.header a {
+  color: var(--blanco);             /* ✅ enlaces blancos */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.header a:hover {
+  color: var(--rosa-principal);     /* ✅ hover en rosa */
+}
+
+/* Botón principal */
+.btn-principal {
+  background-color: var(--rosa-principal);
+  color: var(--blanco);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn-principal:hover {
+  background-color: var(--rosa-coral);
+}
+
+/* Hero section */
+.hero {
+  background-color: var(--lila);
+  color: var(--negro);
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Tarjetas de producto */
+.card {
+  border: 2px solid var(--azul-claro);
+  background-color: var(--amarillo);
+  border-radius: 10px;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Precios */
+.precio {
+  color: var(--rosa-coral);
+  font-weight: bold;
+  font-size: 1.1rem;
+}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Mi perfil - Bela Crochet{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-semibold mb-4">Mi perfil</h1>
+<div class="bg-white shadow rounded p-4 max-w-lg">
+    <p><strong>Usuario:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    {% if user.profile.phone %}
+        <p><strong>Teléfono:</strong> {{ user.profile.phone }}</p>
+    {% endif %}
+    <p class="mt-4">
+        <a href="{% url 'accounts:address_list' %}" class="text-pink-600 hover:text-pink-800">Mis direcciones</a>
+    </p>
+    <p class="mt-2">
+        <a href="{% url 'orders:order_list' %}" class="text-pink-600 hover:text-pink-800">Mis pedidos</a>
+    </p>
+</div>
+{% endblock %}

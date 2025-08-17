@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} - Bela Crochet{% endblock %}
+
+{% block content %}
+{# Si ya cargas styles.css en base.html, puedes borrar la siguiente línea #}
+<link rel="stylesheet" href="{% static 'catalog/css/styles.css' %}">
+
+<div class="flex flex-col md:flex-row md:space-x-8">
+  <!-- Imágenes -->
+  <div class="md:w-1/2">
+    {% if main_image %}
+      <img src="{{ main_image.image.url }}" alt="{{ main_image.alt_text }}" class="w-full h-80 object-cover rounded" />
+    {% endif %}
+    {% if product.images.all|length > 1 %}
+      <div class="flex mt-4 space-x-2 overflow-x-auto">
+        {% for img in product.images.all %}
+          <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="w-16 h-16 object-cover border rounded" />
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Información -->
+  <div class="md:w-1/2 mt-4 md:mt-0">
+    <h1 class="text-2xl font-semibold mb-2">{{ product.name }}</h1>
+    <p class="text-gray-700 mb-4">{{ product.description|linebreaksbr }}</p>
+
+    <!-- Precio con tu paleta -->
+    <p class="precio text-xl mb-4">${{ product.price_base }}</p>
+
+    {% if variants %}
+      <form method="post" action="{% url 'cart:add_to_cart' product.slug %}" class="space-y-4">
+        {% csrf_token %}
+
+        <div>
+          <label for="variant" class="block text-sm font-medium text-gray-700 mb-1">Variante</label>
+          <select name="variant_id" id="variant" class="w-full border rounded px-2 py-2">
+            {% for variant in variants %}
+              <option value="{{ variant.id }}">{{ variant.name }} - ${{ variant.display_price }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div>
+          <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+          <input type="number" id="quantity" name="quantity" min="1" value="1" class="w-24 border rounded px-2 py-2" />
+        </div>
+
+        <!-- Botón con tu paleta -->
+        <button type="submit" class="btn-principal">
+          Añadir al carrito
+        </button>
+      </form>
+    {% else %}
+      <p class="italic">Producto sin variantes disponibles.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

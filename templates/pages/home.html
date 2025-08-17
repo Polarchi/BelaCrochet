@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio - Bela Crochet{% endblock %}
+
+{% block content %}
+<!-- Hero section con paleta -->
+<section class="hero mb-8">
+  <h1 class="text-3xl font-bold mb-4">Hecho a mano con cariño</h1>
+  <p class="text-lg mb-6">Descubre nuestra colección de productos de crochet artesanal.</p>
+  <a href="{% url 'catalog:product_list' %}" class="btn-principal">Ver catálogo</a>
+</section>
+
+<!-- Productos destacados -->
+<section>
+  <h2 class="text-2xl font-semibold mb-4">Productos destacados</h2>
+  {% if featured_products %}
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      {% for product in featured_products %}
+        <div class="card shadow-sm hover:shadow-md transition">
+          <a href="{{ product.get_absolute_url }}">
+            {% with main_img=product.images.first %}
+              {% if main_img %}
+                <img src="{{ main_img.image.url }}" alt="{{ main_img.alt_text }}" class="w-full h-48 object-cover rounded" />
+              {% else %}
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500 rounded">Sin imagen</div>
+              {% endif %}
+            {% endwith %}
+            <div class="p-3">
+              <h3 class="text-sm font-medium mb-1">{{ product.name }}</h3>
+              <p class="precio">${{ product.price_base }}</p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No hay productos disponibles.</p>
+  {% endif %}
+</section>
+
+<!-- Testimonios -->
+<section class="mt-12">
+  <h2 class="text-2xl font-semibold mb-4">Testimonios</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- María -->
+    <figure class="bg-white shadow rounded p-6">
+      <div class="flex items-center gap-4 mb-4">
+        <img
+          src="{% static 'catalog/img/maria_opinion.jpg' %}"
+          alt="Foto de María"
+          class="w-20 h-20 rounded-full object-cover"
+        />
+        <figcaption class="font-semibold text-lg">María</figcaption>
+      </div>
+      <blockquote class="italic text-gray-700">
+        “Los productos de Bela Crochet son hermosos y de gran calidad. ¡Me encantan!”
+      </blockquote>
+    </figure>
+
+    <!-- José -->
+    <figure class="bg-white shadow rounded p-6">
+      <div class="flex items-center gap-4 mb-4">
+        <img
+          src="{% static 'catalog/img/jose_opinion.jpg' %}"
+          alt="Foto de José"
+          class="w-20 h-20 rounded-full object-cover"
+        />
+        <figcaption class="font-semibold text-lg">José</figcaption>
+      </div>
+      <blockquote class="italic text-gray-700">
+        “Excelente servicio y atención al cliente. Volveré a comprar.”
+      </blockquote>
+    </figure>
+  </div>
+</section>
+{% endblock %}

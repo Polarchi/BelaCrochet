@@ -1,0 +1,33 @@
+# Entornos virtuales
+venv/
+.env/
+
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Archivos de base de datos locales
+db.sqlite3
+
+# Archivos de migraciones que no quieras versionar
+*.pyc
+*.pyo
+
+# Archivos de VSCode
+.vscode/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+*.log
+
+# Archivos de coverage/tests
+.coverage
+htmlcov/
+
+# Archivos estáticos generados
+staticfiles/
+media/

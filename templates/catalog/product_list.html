@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Catálogo - Bela Crochet{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row md:space-x-8">
+    <aside class="md:w-1/4 mb-6 md:mb-0">
+        <h2 class="text-xl font-semibold mb-3">Categorías</h2>
+        <ul class="space-y-2">
+            <li>
+                <a href="{% url 'catalog:product_list' %}"
+                   class="{% if not current_category_slug %}font-bold text-gray-700{% endif %} hover:text-pink-600">
+                   Todas
+                </a>
+            </li>
+            {% for cat in categories %}
+                <li>
+                    <a href="{{ cat.get_absolute_url }}"
+                       class="{% if cat.slug == current_category_slug %}font-bold text-gray-700{% endif %} hover:text-pink-600">
+                       {{ cat.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </aside>
+    <div class="md:w-3/4">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Productos</h2>
+            <form method="get">
+                <select name="orden" onchange="this.form.submit()" class="border rounded px-2 py-1">
+                    <option value="">Ordenar por nombre</option>
+                    <option value="precio" {% if request.GET.orden == 'precio' %}selected{% endif %}>Precio ascendente</option>
+                    <option value="precio_desc" {% if request.GET.orden == 'precio_desc' %}selected{% endif %}>Precio descendente</option>
+                </select>
+            </form>
+        </div>
+        {% if products %}
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                {% for product in products %}
+                  <div class="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition bg-white">
+                      <a href="{{ product.get_absolute_url }}">
+                          {% with main_img=product.images.first %}
+                              {% if main_img %}
+                                  <img src="{{ main_img.image.url }}"
+                                       alt="{{ main_img.alt_text|default:product.name }}"
+                                       class="w-full h-48 object-cover">
+                              {% else %}
+                                  <img src="{% static 'catalog/img/' %}{{ product.slug }}.jpg"
+                                       alt="{{ product.name }}"
+                                       class="w-full h-48 object-cover">
+                              {% endif %}
+                          {% endwith %}
+
+                          <div class="p-3">
+                              <h3 class="text-sm font-medium mb-1">{{ product.name }}</h3>
+                              <p class="text-pink-600 font-semibold">${{ product.price_base }}</p>
+                          </div>
+                      </a>
+                  </div>
+                {% endfor %}
+            </div>
+            <div class="mt-6">
+                {% if is_paginated %}
+                    <nav class="flex justify-center space-x-2">
+                        {% if page_obj.has_previous %}
+                            <a href="?{% if request.GET.orden %}orden={{ request.GET.orden }}&{% endif %}page={{ page_obj.previous_page_number }}" class="px-3 py-1 border rounded hover:bg-pink-100">Anterior</a>
+                        {% endif %}
+                        <span class="px-3 py-1">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                        {% if page_obj.has_next %}
+                            <a href="?{% if request.GET.orden %}orden={{ request.GET.orden }}&{% endif %}page={{ page_obj.next_page_number }}" class="px-3 py-1 border rounded hover:bg-pink-100">Siguiente</a>
+                        {% endif %}
+                    </nav>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>No se encontraron productos.</p>
+        {% endif %}
+
+        <!-- 🔽 Sección de testimonios -->
+        <section class="max-w-6xl mx-auto px-4 mt-12">
+          <h2 class="text-2xl font-bold mb-6 text-center">Testimonios</h2>
+
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- Testimonio de María -->
+            <figure class="bg-white rounded-xl p-6 shadow hover:shadow-lg transition">
+              <div class="flex items-center gap-4 mb-4">
+                <img src="{% static 'catalog/img/maria_opinion.jpg' %}" 
+                     alt="Foto de María"
+                     class="w-20 h-20 rounded-full object-cover">
+                <figcaption class="font-semibold text-lg">María</figcaption>
+              </div>
+              <blockquote class="text-gray-700 italic">
+                “Los productos de Bela Crochet son hermosos y de gran calidad. ¡Me encantan!”
+              </blockquote>
+            </figure>
+
+            <!-- Testimonio de José -->
+            <figure class="bg-white rounded-xl p-6 shadow hover:shadow-lg transition">
+              <div class="flex items-center gap-4 mb-4">
+                <img src="{% static 'catalog/img/jose_opinion.jpg' %}" 
+                     alt="Foto de José"
+                     class="w-20 h-20 rounded-full object-cover">
+                <figcaption class="font-semibold text-lg">José</figcaption>
+              </div>
+              <blockquote class="text-gray-700 italic">
+                “Excelente servicio y atención al cliente. Volveré a comprar.”
+              </blockquote>
+            </figure>
+          </div>
+        </section>
+        <!-- 🔼 Fin de testimonios -->
+
+    </div>
+</div>
+{% endblock %}

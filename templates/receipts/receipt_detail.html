@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Comprobante {{ order.order_number }} - Bela Crochet{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Print styling */
+@media print {
+    header, footer, .no-print { display: none !important; }
+    body { background: white; color: black; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow rounded p-6">
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            {% if site_settings and site_settings.logo %}
+                <img src="{{ site_settings.logo.url }}" alt="Logo" class="h-12 mb-2" />
+            {% endif %}
+            <h1 class="text-2xl font-semibold">{{ brand_name }}</h1>
+        </div>
+        <div class="text-right">
+            <p class="font-semibold text-lg">Comprobante de pedido</p>
+            <p>Número: {{ order.order_number }}</p>
+            <p>Fecha: {{ order.created_at|date:"d/m/Y H:i" }}</p>
+        </div>
+    </div>
+    <hr class="my-4" />
+    <h2 class="text-lg font-semibold mb-2">Datos de envío</h2>
+    <p><strong>Nombre:</strong> {{ order.shipping_full_name }}</p>
+    <p><strong>Dirección:</strong> {{ order.shipping_address_line1 }}{% if order.shipping_address_line2 %}, {{ order.shipping_address_line2 }}{% endif %}</p>
+    <p><strong>Ciudad:</strong> {{ order.shipping_city }}</p>
+    <p><strong>Provincia/Estado:</strong> {{ order.shipping_state }}</p>
+    <p><strong>Código postal:</strong> {{ order.shipping_postal_code }}</p>
+    <p><strong>País:</strong> {{ order.shipping_country }}</p>
+    <hr class="my-4" />
+    <h2 class="text-lg font-semibold mb-2">Detalle del pedido</h2>
+    <table class="w-full divide-y divide-gray-200 mb-4">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Variante</th>
+                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cantidad</th>
+                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
+                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {% for item in items %}
+                <tr>
+                    <td class="px-3 py-2 whitespace-nowrap">{{ item.product_name }}</td>
+                    <td class="px-3 py-2 whitespace-nowrap">{{ item.variant_name }}</td>
+                    <td class="px-3 py-2 whitespace-nowrap">{{ item.quantity }}</td>
+                    <td class="px-3 py-2 whitespace-nowrap">${{ item.unit_price }}</td>
+                    <td class="px-3 py-2 whitespace-nowrap">${{ item.line_total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="text-right mb-4">
+        <p><strong>Subtotal:</strong> ${{ order.subtotal }}</p>
+        <p><strong>Envío:</strong> ${{ order.shipping_cost }}</p>
+        <p><strong>Descuento:</strong> ${{ order.discount_total }}</p>
+        <p class="text-lg font-bold">Total: ${{ order.total }}</p>
+    </div>
+    <hr class="my-4" />
+    <h2 class="text-lg font-semibold mb-2">Instrucciones de pago</h2>
+    <p>Gracias por tu compra. Realiza tu pago a través de transferencia bancaria a la cuenta <strong>Banco Pichincha, cuenta corriente 1234567890</strong> a nombre de <strong>Bela Crochet</strong>. También puedes pagar en efectivo al momento de retirar en nuestra tienda.</p>
+    <p>Una vez realizado el pago, envía el comprobante por WhatsApp o correo electrónico para procesar tu pedido.</p>
+    <div class="mt-6 no-print">
+        <button onclick="window.print();" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Imprimir</button>
+        {% if receipt.pdf_file and receipt.pdf_file.url %}
+            <a href="{{ receipt.pdf_file.url }}" class="ml-2 px-4 py-2 bg-pink-500 text-white rounded hover:bg-pink-600">Descargar PDF</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
